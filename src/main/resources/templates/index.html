@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div>
+        <form id="house-form" th:action="@{/api/houses}" method="post" enctype="multipart/form-data">
+            <div class="houseInfo">
+                <label>이름</label>
+                <input type="text" name="name" value="스타크">
+
+                <label>상징</label>
+                <input type="text" name="symbol" value="다이어울프">
+
+                <label>본거지</label>
+                <input type="text" name="seat" value="윈터펠">
+
+                <label>사진</label>
+                <input type="file" name="image">
+            </div>
+            <div class="houseInfo">
+                <label>이름</label>
+                <input type="text" name="name" value="라니스터">
+
+                <label>상징</label>
+                <input type="text" name="symbol" value="사자">
+
+                <label>본거지</label>
+                <input type="text" name="seat" value="캐스털리 락">
+
+                <label>사진</label>
+                <input type="file" name="image">
+            </div>
+            <div class="houseInfo">
+                <label>이름</label>
+                <input type="text" name="name" value="타가리옌">
+
+                <label>상징</label>
+                <input type="text" name="symbol" value="용">
+
+                <label>본거지</label>
+                <input type="text" name="seat" value="모름">
+
+                <label>사진</label>
+                <input type="file" name="image">
+            </div>
+            <button type="button" class="go-button">go</button>
+        </form>
+    </div>
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+    <script>
+        $('.go-button').click(function () {
+            console.log('go-button clicked');
+
+            modifyInputName(true);
+
+            var formData = new FormData( $('#house-form')[0]);
+
+            $.ajax({
+                url: '/api/houses',
+                method: 'post',
+                data: formData,
+                processData: false,
+                contentType: false,
+                cache: false,
+                timeout: 600000,
+                success: function (data) {
+                    modifyInputName(false);
+                },
+                error: function (e) {
+                    modifyInputName(false);
+                }
+            });
+        });
+
+        function modifyInputName(indexAttaching) {
+            var houseInfos = $("div[class='houseInfo']");
+            for (var i = 0, len = houseInfos.length; i < len; i++) {
+                var inputList = $(houseInfos[i]).find("input");
+                for (var j = 0, infoSize = inputList.length; j < infoSize; j++) {
+                    inputList[j].name
+                        = indexAttaching ? 'houses[' + i + '].' + inputList[j].name : inputList[j].name.split('.')[1];
+                    console.log(inputList[j].name);
+                }
+            }
+        }
+
+    </script>
+</body>
+</html>
